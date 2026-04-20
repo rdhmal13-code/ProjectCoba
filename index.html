@@ -3,64 +3,94 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Links</title>
+    <title>DIYBLORA - Links</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            color: white;
             display: flex;
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
             margin: 0;
             padding: 40px 20px;
-            color: white;
         }
-        .profile-img { width: 100px; height: 100px; border-radius: 50%; background: #ddd; margin-bottom: 15px; border: 3px solid white; }
-        h1 { font-size: 1.5rem; margin-bottom: 30px; }
+        .profile-pic {
+            width: 96px;
+            height: 96px;
+            background: #555;
+            border-radius: 50%;
+            margin-bottom: 15px;
+            border: 3px solid #fff;
+            background-image: url('https://via.placeholder.com/150'); /* Ganti dengan link foto kamu */
+            background-size: cover;
+        }
+        h1 { font-size: 1.2rem; letter-spacing: 1px; margin-bottom: 30px; }
         .links-container { width: 100%; max-width: 400px; }
         .link-card {
-            background: white;
-            color: #333;
-            padding: 15px;
-            margin-bottom: 15px;
-            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            padding: 16px;
+            margin-bottom: 16px;
+            border-radius: 50px;
             text-align: center;
             text-decoration: none;
             display: block;
-            font-weight: bold;
-            transition: transform 0.2s, background 0.2s;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            font-weight: 600;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
         }
-        .link-card:hover { transform: scale(1.03); background: #f0f0f0; }
+        .link-card:hover {
+            background: white;
+            color: #0f0c29;
+            transform: translateY(-3px);
+        }
+        #loading { font-size: 14px; color: #aaa; }
     </style>
 </head>
 <body>
 
-    <div class="profile-img"></div>
-    <h1>@UsernameAnda</h1>
+    <div class="profile-pic"></div>
+    <h1>@DIYBLORA</h1>
 
-    <div class="links-container" id="link-list">
+    <div id="loading">Memuat menu...</div>
+    <div class="links-container" id="links-list">
         </div>
 
     <script>
-        function loadLinks() {
-            const container = document.getElementById('link-list');
-            const savedLinks = JSON.parse(localStorage.getItem('myLinks')) || [];
-            
-            container.innerHTML = '';
-            savedLinks.forEach(link => {
-                const a = document.createElement('a');
-                a.href = link.url;
-                a.className = 'link-card';
-                a.target = '_blank';
-                a.innerText = link.name;
-                container.appendChild(a);
-            });
+        const dbURL = "https://diyblora-default-rtdb.asia-southeast1.firebasedatabase.app/.json";
+
+        async function fetchLinks() {
+            try {
+                const response = await fetch(dbURL);
+                const data = await response.json();
+                const container = document.getElementById('links-list');
+                const loading = document.getElementById('loading');
+                
+                container.innerHTML = '';
+                loading.style.display = 'none';
+
+                if (data) {
+                    Object.values(data).forEach(item => {
+                        const a = document.createElement('a');
+                        a.href = item.url;
+                        a.className = 'link-card';
+                        a.target = '_blank';
+                        a.innerText = item.name;
+                        container.appendChild(a);
+                    });
+                } else {
+                    container.innerHTML = "<p>Belum ada menu yang ditambahkan.</p>";
+                }
+            } catch (e) {
+                console.error("Gagal ambil data:", e);
+                document.getElementById('loading').innerText = "Gagal memuat data.";
+            }
         }
 
-        // Muat data saat halaman dibuka
-        window.onload = loadLinks;
+        window.onload = fetchLinks;
     </script>
 </body>
 </html>
