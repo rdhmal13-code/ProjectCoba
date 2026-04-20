@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Links</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 40px 20px;
+            color: white;
+        }
+        .profile-img { width: 100px; height: 100px; border-radius: 50%; background: #ddd; margin-bottom: 15px; border: 3px solid white; }
+        h1 { font-size: 1.5rem; margin-bottom: 30px; }
+        .links-container { width: 100%; max-width: 400px; }
+        .link-card {
+            background: white;
+            color: #333;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            text-align: center;
+            text-decoration: none;
+            display: block;
+            font-weight: bold;
+            transition: transform 0.2s, background 0.2s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .link-card:hover { transform: scale(1.03); background: #f0f0f0; }
+    </style>
+</head>
+<body>
+
+    <div class="profile-img"></div>
+    <h1>@UsernameAnda</h1>
+
+    <div class="links-container" id="link-list">
+        </div>
+
+    <script>
+        function loadLinks() {
+            const container = document.getElementById('link-list');
+            const savedLinks = JSON.parse(localStorage.getItem('myLinks')) || [];
+            
+            container.innerHTML = '';
+            savedLinks.forEach(link => {
+                const a = document.createElement('a');
+                a.href = link.url;
+                a.className = 'link-card';
+                a.target = '_blank';
+                a.innerText = link.name;
+                container.appendChild(a);
+            });
+        }
+
+        // Muat data saat halaman dibuka
+        window.onload = loadLinks;
+    </script>
+</body>
+</html>
